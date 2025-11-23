@@ -42,7 +42,7 @@ export default function TokensPage() {
                 <div className="flex gap-4">
                   <span className="text-2xl font-bold">2.</span>
                   <div>
-                    <div className="font-bold mb-1">Earn MGA tokens automatically</div>
+                    <div className="font-bold mb-1">Earn SCT tokens automatically</div>
                     <div className="text-sm">Get tokens credited when each round completes successfully</div>
                   </div>
                 </div>

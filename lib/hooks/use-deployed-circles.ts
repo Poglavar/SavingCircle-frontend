@@ -74,7 +74,11 @@ const fetchCirclesInternal = async () => {
         }
         setCircleCache(address, data)
         sequentialResults.push(nextCircle)
-        setCirclesState({ circles: [...sequentialResults] })
+        const nextState: Partial<CirclesState> = { circles: [...sequentialResults] }
+        if (sequentialResults.length === 1) {
+          nextState.loading = false
+        }
+        setCirclesState(nextState)
       } catch (err) {
         console.error("Failed to load circle", address, err)
       }

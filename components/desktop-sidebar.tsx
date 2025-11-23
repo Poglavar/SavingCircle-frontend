@@ -51,7 +51,7 @@ export function DesktopSidebar() {
       : []),
     {
       id: "position",
-      label: "POSITION",
+      label: "POSITIONS",
       href: "/profile",
       icon: "■",
     },
@@ -164,9 +164,6 @@ export function DesktopSidebar() {
                 <div className="text-xs font-bold mb-1">WALLET</div>
                 <div className="text-sm font-mono">{label}</div>
               </div>
-              <span className="text-xs font-bold uppercase tracking-wide">
-                {wrongChain ? "Fix" : connected ? "Manage" : "Connect"}
-              </span>
             </button>
           )
         }}
