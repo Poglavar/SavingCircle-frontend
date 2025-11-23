@@ -24,7 +24,8 @@ const formatAddress = (address?: string) => {
 export function DesktopSidebar() {
   const pathname = usePathname()
   const { joinedCircles } = useUser()
-  const { circles } = useDeployedCircles()
+  const isCirclesIndex = pathname === "/circles"
+  const { circles } = useDeployedCircles({ enabled: isCirclesIndex })
 
   const navItems: NavItem[] = [
     {
@@ -38,15 +39,15 @@ export function DesktopSidebar() {
     // Only show PAYMENTS if user has joined at least one circle
     ...(joinedCircles.length > 0
       ? [
-          {
-            id: "payments",
-            label: "PAYMENTS",
-            href: "/payments",
-            icon: "⚠",
-            value: "!",
-            needsAttention: true,
-          },
-        ]
+        {
+          id: "payments",
+          label: "PAYMENTS",
+          href: "/payments",
+          icon: "⚠",
+          value: "!",
+          needsAttention: true,
+        },
+      ]
       : []),
     {
       id: "position",
@@ -100,15 +101,14 @@ export function DesktopSidebar() {
       </div>
 
       <Link
-        href="/miles"
-        className={`h-[72px] flex flex-col items-start justify-center px-6 border-t-2 border-mandinga-black transition-colors ${
-          pathname === "/miles"
-            ? "bg-mandinga-black text-mandinga-white"
-            : "bg-mandinga-white hover:bg-mandinga-gray-100"
-        }`}
+        href="/tokens"
+        className={`h-[72px] flex flex-col items-start justify-center px-6 border-t-2 border-mandinga-black transition-colors ${pathname === "/tokens"
+          ? "bg-mandinga-black text-mandinga-white"
+          : "bg-mandinga-white hover:bg-mandinga-gray-100"
+          }`}
       >
         <div className="flex items-center justify-between w-full">
-          <span className="text-sm font-bold">MILES</span>
+          <span className="text-sm font-bold">TOKENS</span>
           <span className="text-3xl font-bold">{joinedCircles.length > 0 ? 1250 : 0}</span>
         </div>
         <div className="text-lg leading-none mt-1">◆</div>

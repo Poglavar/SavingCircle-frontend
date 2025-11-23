@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { JsonRpcProvider } from "ethers"
 import { fetchCircleContractData, type CircleContractData } from "@/lib/contract-data"
+import { setCircleCache } from "@/lib/circle-cache"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
+import { getSharedJsonRpcProvider } from "@/lib/shared-provider"
 
 export type CircleListItem = {
   id: string
@@ -21,93 +22,113 @@ const deriveTimeLeft = (roundDeadline?: number) => {
   return Math.max(0, roundDeadline - now)
 }
 
-const POLL_INTERVAL_MS = 15000
+type CirclesState = {
+  circles: CircleListItem[]
+  loading: boolean
+  error: string | null
+}
 
-export function useDeployedCircles() {
-  const [circles, setCircles] = useState<CircleListItem[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const listeners = new Set<(state: CirclesState) => void>()
+let circlesState: CirclesState = { circles: [], loading: false, error: null }
+let fetchPromise: Promise<void> | null = null
 
-  useEffect(() => {
-    let cancelled = false
-    let pollTimer: ReturnType<typeof setInterval> | null = null
+const notify = () => {
+  listeners.forEach((listener) => listener(circlesState))
+}
 
-    const fetchCircles = async (isBackground = false) => {
-      if (!isBackground) {
-        setLoading(true)
-      }
-      setError(null)
+const setCirclesState = (updates: Partial<CirclesState>) => {
+  circlesState = { ...circlesState, ...updates }
+  notify()
+}
+
+const fetchCirclesInternal = async () => {
+  setCirclesState({ loading: true, error: null })
+  const sequentialResults: CircleListItem[] = []
+  try {
+    const response = await fetch("/api/deployed-circles")
+    if (!response.ok) {
+      throw new Error("Failed to load deployed circles")
+    }
+    const { addresses } = (await response.json()) as { addresses: string[] }
+    if (!addresses || addresses.length === 0) {
+      setCirclesState({ circles: [], loading: false })
+      return
+    }
+
+    const provider = getSharedJsonRpcProvider(getSepoliaRpcUrl())
+
+    for (const address of addresses) {
       try {
-        const response = await fetch("/api/deployed-circles")
-        if (!response.ok) {
-          throw new Error("Failed to load deployed circles")
+        const data = await fetchCircleContractData(address, provider)
+        const members = data.numUsers
+        const prize = data.installmentSize * (data.numUsers || 0)
+        const timeLeft = deriveTimeLeft(data.roundDeadline)
+        const nextCircle: CircleListItem = {
+          id: address.toLowerCase(),
+          address,
+          contract: data,
+          members,
+          maxMembers: data.numUsers,
+          prize,
+          timeLeft,
         }
-        const { addresses } = (await response.json()) as { addresses: string[] }
-        if (!addresses || addresses.length === 0) {
-          if (!cancelled) {
-            setCircles([])
-          }
-          return
-        }
-
-        const provider = new JsonRpcProvider(getSepoliaRpcUrl())
-        const results = await Promise.all(
-          addresses.map(async (address) => {
-            try {
-              const data = await fetchCircleContractData(address, provider)
-              const members = data.numUsers
-              const prize = data.installmentSize * (data.numUsers || 0)
-              const timeLeft = deriveTimeLeft(data.roundDeadline)
-              return {
-                id: address.toLowerCase(),
-                address,
-                contract: data,
-                members,
-                maxMembers: data.numUsers,
-                prize,
-                timeLeft,
-              }
-            } catch (err) {
-              console.error("Failed to load circle", address, err)
-              return null
-            }
-          }),
-        )
-
-        if (!cancelled) {
-          setCircles(results.filter((circle): circle is CircleListItem => circle !== null))
-        }
+        setCircleCache(address, data)
+        sequentialResults.push(nextCircle)
+        setCirclesState({ circles: [...sequentialResults] })
       } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to fetch circles")
-        }
-      } finally {
-        if (!cancelled) {
-          if (!isBackground) {
-            setLoading(false)
-          }
-        }
+        console.error("Failed to load circle", address, err)
       }
     }
 
-    fetchCircles(false)
-    pollTimer = setInterval(() => {
-      void fetchCircles(true)
-    }, POLL_INTERVAL_MS)
+    setCirclesState({ circles: [...sequentialResults], loading: false })
+  } catch (err) {
+    setCirclesState({
+      error: err instanceof Error ? err.message : "Failed to fetch circles",
+      loading: false,
+    })
+  }
+}
 
+const ensureFetch = () => {
+  if (!fetchPromise) {
+    fetchPromise = fetchCirclesInternal().finally(() => {
+      fetchPromise = null
+    })
+  }
+  return fetchPromise
+}
+
+type UseDeployedCirclesOptions = {
+  enabled?: boolean
+}
+
+export function useDeployedCircles(options: UseDeployedCirclesOptions = {}) {
+  const { enabled = true } = options
+  const [state, setState] = useState<CirclesState>(circlesState)
+
+  useEffect(() => {
+    const listener = (nextState: CirclesState) => {
+      setState(nextState)
+    }
+    listeners.add(listener)
+    listener(circlesState)
     return () => {
-      cancelled = true
-      if (pollTimer) {
-        clearInterval(pollTimer)
-      }
+      listeners.delete(listener)
     }
   }, [])
 
-  const sortedCircles = useMemo(() => {
-    return [...circles].sort((a, b) => a.contract.name.localeCompare(b.contract.name))
-  }, [circles])
+  useEffect(() => {
+    if (!enabled) return
+    if (circlesState.circles.length === 0 && !circlesState.loading) {
+      void ensureFetch()
+    }
+  }, [enabled])
 
-  return { circles: sortedCircles, loading, error }
+  const sortedCircles = useMemo(() => {
+    return [...state.circles].sort((a, b) => a.contract.name.localeCompare(b.contract.name))
+  }, [state.circles])
+
+  return { circles: sortedCircles, loading: state.loading, error: state.error, refresh: ensureFetch }
 }
 
 

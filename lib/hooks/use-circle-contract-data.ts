@@ -1,19 +1,23 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { JsonRpcProvider } from "ethers"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
 import { fetchCircleContractData, type CircleContractData } from "@/lib/contract-data"
-
-const REFRESH_INTERVAL_MS = 15000
+import { getCircleCache, setCircleCache } from "@/lib/circle-cache"
+import { getSharedJsonRpcProvider } from "@/lib/shared-provider"
 
 export function useCircleContractData(address?: string) {
-  const [data, setData] = useState<CircleContractData | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<CircleContractData | null>(() => getCircleCache(address))
+  const [loading, setLoading] = useState(() => Boolean(address) && !getCircleCache(address))
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!address) return
+    if (!address) {
+      setData(null)
+      setLoading(false)
+      setError(null)
+      return
+    }
 
     const rpc = getSepoliaRpcUrl()
 
@@ -23,39 +27,38 @@ export function useCircleContractData(address?: string) {
     }
 
     let cancelled = false
-    let pollTimer: ReturnType<typeof setInterval> | null = null
-    const provider = new JsonRpcProvider(rpc)
+    const provider = getSharedJsonRpcProvider(rpc)
 
-    const fetchData = async (isBackground = false) => {
-      if (!isBackground) {
-        setLoading(true)
-      }
+    const fetchData = async () => {
+      setLoading(true)
       setError(null)
       try {
         const payload = await fetchCircleContractData(address, provider)
         if (!cancelled) {
+          setCircleCache(address, payload)
           setData(payload)
         }
       } catch (err) {
         if (cancelled) return
         setError(err instanceof Error ? err.message : "Failed to load circle data")
       } finally {
-        if (!cancelled && !isBackground) {
+        if (!cancelled) {
           setLoading(false)
         }
       }
     }
 
-    fetchData(false)
-    pollTimer = setInterval(() => {
-      void fetchData(true)
-    }, REFRESH_INTERVAL_MS)
+    const cached = getCircleCache(address)
+    if (cached) {
+      setData(cached)
+      setLoading(false)
+      return
+    }
+
+    void fetchData()
 
     return () => {
       cancelled = true
-      if (pollTimer) {
-        clearInterval(pollTimer)
-      }
     }
   }, [address])
 

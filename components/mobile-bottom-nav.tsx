@@ -41,9 +41,9 @@ export function MobileBottomNav() {
         ]
       : []),
     {
-      id: "miles",
-      label: "MILES",
-      href: "/miles",
+      id: "tokens",
+      label: "TOKENS",
+      href: "/tokens",
       icon: "◆",
       value: joinedCircles.length > 0 ? 1250 : 0,
       hasActivity: joinedCircles.length > 0,

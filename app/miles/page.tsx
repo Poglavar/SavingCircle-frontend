@@ -6,24 +6,24 @@ import ContextBar from "@/components/context-bar"
 import { useTimer } from "@/contexts/timer-context"
 import { useUser } from "@/contexts/user-context"
 
-export default function MilesPage() {
+export default function TokensPage() {
   const { nextRoundSeconds } = useTimer()
   const { joinedCircles } = useUser()
 
-  const hasMiles = joinedCircles.length > 0
+  const hasTokens = joinedCircles.length > 0
 
   return (
     <div className="min-h-screen flex bg-white">
       <DesktopSidebar />
 
       <main className="flex-1 md:ml-[240px] pb-20 md:pb-0">
-        <ContextBar location="SavingCircles MILES (MGA)" nextRoundSeconds={nextRoundSeconds} />
+        <ContextBar location="SavingCircles TOKENS (MGA)" nextRoundSeconds={nextRoundSeconds} />
 
-        {!hasMiles ? (
+        {!hasTokens ? (
           <div className="p-8 max-w-2xl mx-auto">
             <div className="text-center mb-12 pt-8">
-              <div className="text-4xl font-bold mb-4">NO MILES YET</div>
-              <div className="text-lg mb-8">Join your first circle to start earning MGA miles</div>
+              <div className="text-4xl font-bold mb-4">NO TOKENS YET</div>
+              <div className="text-lg mb-8">Join your first circle to start earning MGA tokens</div>
             </div>
 
             {/* How it works section */}
@@ -42,21 +42,21 @@ export default function MilesPage() {
                 <div className="flex gap-4">
                   <span className="text-2xl font-bold">2.</span>
                   <div>
-                    <div className="font-bold mb-1">Earn MGA miles automatically</div>
-                    <div className="text-sm">Get miles credited when each round completes successfully</div>
+                    <div className="font-bold mb-1">Earn MGA tokens automatically</div>
+                    <div className="text-sm">Get tokens credited when each round completes successfully</div>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <span className="text-2xl font-bold">3.</span>
                   <div>
-                    <div className="font-bold mb-1">Use miles to bid in auctions</div>
+                    <div className="font-bold mb-1">Use tokens to bid in auctions</div>
                     <div className="text-sm">Compete for early access to your circle's prize pool</div>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <span className="text-2xl font-bold">4.</span>
                   <div>
-                    <div className="font-bold mb-1">Track your miles across all circles</div>
+                    <div className="font-bold mb-1">Track your tokens across all circles</div>
                     <div className="text-sm">Your balance accumulates as you participate in multiple circles</div>
                   </div>
                 </div>
@@ -76,21 +76,21 @@ export default function MilesPage() {
             <div className="border-2 border-black mb-8 p-8 bg-yellow-100">
               <div className="text-sm mb-2">TOTAL BALANCE</div>
               <div className="text-6xl font-bold mb-2">1,250 MGA</div>
-              <div className="text-sm">Mandinga Miles</div>
+              <div className="text-sm">Mandinga Tokens</div>
             </div>
 
-            {/* What are MGA Miles */}
+            {/* What are MGA Tokens */}
             <div className="border-2 border-black mb-8">
               <div className="h-12 bg-gray-100 flex items-center px-4 border-b-2 border-black">
-                <h2 className="text-sm font-bold">WHAT ARE MGA MILES?</h2>
+                <h2 className="text-sm font-bold">WHAT ARE MGA TOKENS?</h2>
               </div>
               <div className="p-8">
                 <p className="mb-4">
-                  Mandinga Miles (MGA) are protocol tokens you earn by participating in circles. They're separate from
+                  Mandinga Tokens (MGA) are protocol tokens you earn by participating in circles. They're separate from
                   USDC, which is used for your savings contributions.
                 </p>
                 <p>
-                  Use MGA miles to bid in auctions for early access to prize pools, giving you a chance to receive your
+                  Use MGA tokens to bid in auctions for early access to prize pools, giving you a chance to receive your
                   payout before the random drawing.
                 </p>
               </div>

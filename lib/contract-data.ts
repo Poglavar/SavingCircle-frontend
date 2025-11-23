@@ -2,6 +2,7 @@ import { Contract, JsonRpcProvider } from "ethers"
 import savingCircleAbi from "@/lib/abi/savingcircle.sol.abi.json"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
 import { withRpcThrottle } from "@/lib/rpc-throttle"
+import { getSharedJsonRpcProvider } from "@/lib/shared-provider"
 
 export type CircleContractData = {
   address: string
@@ -20,7 +21,7 @@ export type CircleContractData = {
 
 export async function fetchCircleContractData(address: string, provider?: JsonRpcProvider): Promise<CircleContractData> {
   const rpc = getSepoliaRpcUrl()
-  const resolvedProvider = provider ?? new JsonRpcProvider(rpc)
+  const resolvedProvider = provider ?? getSharedJsonRpcProvider(rpc)
   const contract = new Contract(address, savingCircleAbi, resolvedProvider)
 
   const [
