@@ -144,11 +144,11 @@ export default function AuctionPage() {
         <div className="grid grid-cols-2 border-t-2 border-black">
           <div className="border-r-2 border-b-2 border-black p-6">
             <div className="text-sm mb-2">YOUR BALANCE</div>
-            <div className="text-4xl font-bold">{userBalance} MNDG</div>
+            <div className="text-4xl font-bold">{userBalance} SCT</div>
           </div>
           <div className="border-b-2 border-black p-6">
             <div className="text-sm mb-2">YOUR BID</div>
-            <div className="text-4xl font-bold">{currentBid} MNDG</div>
+            <div className="text-4xl font-bold">{currentBid} SCT</div>
           </div>
           <div className="border-r-2 border-black p-6">
             <div className="text-sm mb-2">QUOTA POOL</div>
@@ -198,7 +198,7 @@ export default function AuctionPage() {
                 className="w-full h-14 px-4 text-4xl font-bold text-right border-2 border-black bg-white"
                 style={{ borderRadius: 0 }}
               />
-              <div className="text-right text-sm mt-1">MNDG</div>
+              <div className="text-right text-sm mt-1">SCT</div>
             </div>
 
             {/* Quick Buttons */}

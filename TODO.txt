@@ -1,6 +1,7 @@
 - In the bottom left we have a box where Wallet address is displayed. Let's wire this up and make it live. On page load it should present a "Connect Wallet" button. This button should allow us to connect a blockchain wallet like Metamask. Once a wallet is connected, the connected address is displayed there. We'll use Rainbowkit for the wallet connectivity https://rainbowkit.com/docs/installation
 
-- rename MNDG to CT token name
+- In the upper left of the screen replace MANDINGA with SavingCircles
+- rename token ticket MNDG to SCT everywhere it is used
 
 - Let's rework the "Join Circle" button and flow. In the modal it pops up 
 texts should be changed from:
@@ -10,3 +11,26 @@ Ticket Price: --> remove this part
 10 USDC --> remove this part
 After purchase --> After registering
 The "Confirm" button should initiate the sending of a blockchain transaction to the smart contract's register() function. Clicking it should pop up a wallet confirmation dialog for the transaction. While the transaction is being confirmed we gray out (disable) the modal's buttons and change "Confirm" to "Confirming..."
+
+- Change Betacircle's address to be: 0xF2aeF25bBE55dd09E7F3747462f2d8da909f0174
+- change Gammacircle's address to be: 0x32855E25e31d8a54890a7Bb026Ef7EC24A4DA461
+
+- When user lands on a circle details page for a circle that he has already joined/registered for (address[] public registeredUsers from the contract can be queried to find out), instead of the "join circle" button the button should say "Pay installment". When clicked it should open up a modal with details about paying the installment for the round. Clicking the button should initiate a blockchain transaction calling function depositRound(uint256 round, uint256 auctionSize, address originalUser) on the smart contract. While the transaction is processing the button "Pay installment" changes to "Paying..."
+
+- Can't do this. Fell back to a text file. We need to query the list of deployed circles from the blockchain. We can do it by using the ethers library to query the blockchain for all events emitted by the savingcirclefactorycontract. The event is called NewCircle(address) and the address is address of one circle. The ABI for the contract is in lib/abi/savingcirclefactory.sol.abi.json. We need to wire up the list of saving circles which now has three hardcoded circles to use the fetched list of real addresses instead.
+
+- Even for contracts that nobody yet registered for we have ACTIVE MEMBERS 3/3. Let's make sure we are querying the address[] public registeredUsers for this data.
+
+What we still need for the demo:
+- make Join Circle button work without revert
+- make Pay Installment button work without revert
+
+- orchestrate the calling of VRF at round end. When the frontend counter (TIME LEFT) expires, replace it with a button saying Raffle which calls DirectFundingConsumer.sol's function requestRandomWords(address savingCircle, uint256 round, bool enableNativePayment). The abi is in lib/abi/directfundingconsumer.sol.abi.json. The frontend keeps polling for savingcircle contract for changes, when the raffle has been processed and the winner is set we create a celebratory popup and update the information.
+
+- deploy the frontend on Vercel
+
+- in the upper left there is a box with "Circles 0". The big 0 should instead be the count of deployed circles.
+
+- change the deployeddavingcircles.txt to .json
+
+- all the circles have the same name in the list and details, SavingCircleSeat. We need to change that to SavingCircle 0x123 (first 8 characters of the circle's contract)

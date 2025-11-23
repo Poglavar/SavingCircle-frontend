@@ -4,6 +4,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useUser } from "@/contexts/user-context"
+import { useDeployedCircles } from "@/lib/hooks/use-deployed-circles"
 
 interface NavItem {
   id: string
@@ -23,6 +24,7 @@ const formatAddress = (address?: string) => {
 export function DesktopSidebar() {
   const pathname = usePathname()
   const { joinedCircles } = useUser()
+  const { circles } = useDeployedCircles()
 
   const navItems: NavItem[] = [
     {
@@ -30,7 +32,7 @@ export function DesktopSidebar() {
       label: "CIRCLES",
       href: "/circles",
       icon: "●●○",
-      value: joinedCircles.length,
+      value: circles.length,
       hasActivity: false,
     },
     // Only show PAYMENTS if user has joined at least one circle
@@ -69,7 +71,7 @@ export function DesktopSidebar() {
         className="h-16 flex items-center justify-center border-b-2 border-mandinga-black hover:bg-mandinga-gray-100 transition-colors gap-2"
       >
         <span className="text-xl">⚪️</span>
-        <h1 className="text-xl font-bold">MANDINGA</h1>
+        <h1 className="text-xl font-bold">SavingCircles</h1>
       </Link>
 
       {/* Navigation Items */}

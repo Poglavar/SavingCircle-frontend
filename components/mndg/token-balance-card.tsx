@@ -8,7 +8,7 @@ export function TokenBalanceCard({ balance, changeThisRound = 0, className = "" 
   return (
     <div className={`border-2 border-black bg-white ${className}`} style={{ height: "160px" }}>
       <div className="h-10 flex items-center px-4 border-b-2 border-black bg-gray-100">
-        <span className="text-sm font-bold">MNDG BALANCE</span>
+        <span className="text-sm font-bold">SCT BALANCE</span>
       </div>
       <div className="flex flex-col items-center justify-center" style={{ height: "120px" }}>
         <span className="text-6xl font-bold mb-2">{balance}</span>

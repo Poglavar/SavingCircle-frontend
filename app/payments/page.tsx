@@ -114,7 +114,7 @@ export default function PaymentsPage() {
           <div className="col-span-2 p-6">
             <div className="text-sm text-gray-600 mb-2">📋 YOUR STATUS</div>
             <div className="font-bold">Last paid: Round 2</div>
-            <div className="font-bold">Earned: 100 MNDG total</div>
+            <div className="font-bold">Earned: 100 SCT total</div>
           </div>
         </div>
       </main>

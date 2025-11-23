@@ -14,19 +14,25 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 export function UserProvider({ children }: { children: ReactNode }) {
   const [joinedCircles, setJoinedCircles] = useState<string[]>([])
 
+  const normalizeId = (circleId: string) => circleId?.toLowerCase?.() ?? circleId
+
   const joinCircle = (circleId: string) => {
     setJoinedCircles((prev) => {
-      if (prev.includes(circleId)) return prev
-      return [...prev, circleId]
+      const normalized = normalizeId(circleId)
+      if (!normalized) return prev
+      if (prev.includes(normalized)) return prev
+      return [...prev, normalized]
     })
   }
 
   const leaveCircle = (circleId: string) => {
-    setJoinedCircles((prev) => prev.filter((id) => id !== circleId))
+    const normalized = normalizeId(circleId)
+    setJoinedCircles((prev) => prev.filter((id) => id !== normalized))
   }
 
   const isJoined = (circleId: string) => {
-    return joinedCircles.includes(circleId)
+    const normalized = normalizeId(circleId)
+    return joinedCircles.includes(normalized)
   }
 
   return (

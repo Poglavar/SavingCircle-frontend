@@ -17,7 +17,7 @@ export default function MilesPage() {
       <DesktopSidebar />
 
       <main className="flex-1 md:ml-[240px] pb-20 md:pb-0">
-        <ContextBar location="MANDINGA MILES (MGA)" nextRoundSeconds={nextRoundSeconds} />
+        <ContextBar location="SavingCircles MILES (MGA)" nextRoundSeconds={nextRoundSeconds} />
 
         {!hasMiles ? (
           <div className="p-8 max-w-2xl mx-auto">

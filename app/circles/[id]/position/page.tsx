@@ -102,16 +102,16 @@ export default function PositionPage() {
               <div className="space-y-2 mb-4">
                 <div className="h-10 flex items-center justify-between font-mono text-sm">
                   <span>Earned:</span>
-                  <span>150 MNDG</span>
+                  <span>150 SCT</span>
                 </div>
                 <div className="h-10 flex items-center justify-between font-mono text-sm">
                   <span>Spent:</span>
-                  <span>50 MNDG</span>
+                  <span>50 SCT</span>
                 </div>
                 <div className="border-t-2 border-gray-300 pt-2">
                   <div className="h-10 flex items-center justify-between font-mono text-sm font-bold">
                     <span>Balance:</span>
-                    <span>100 MNDG</span>
+                    <span>100 SCT</span>
                   </div>
                 </div>
               </div>

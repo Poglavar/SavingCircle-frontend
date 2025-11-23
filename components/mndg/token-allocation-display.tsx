@@ -13,7 +13,7 @@ export function TokenAllocationDisplay({ circleName, amount, total, className = 
       <div className="flex items-center justify-between">
         <span className="text-lg font-bold">{circleName}</span>
         <span className="text-sm text-mandinga-gray-600">
-          {amount} / {total} MNDG ({percentage.toFixed(1)}%)
+          {amount} / {total} SCT ({percentage.toFixed(1)}%)
         </span>
       </div>
 

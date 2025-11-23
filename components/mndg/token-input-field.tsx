@@ -36,13 +36,13 @@ export default function TokenInputField({
           className="w-full text-4xl font-bold text-center outline-none"
           max={Math.min(maxAmount, availableBalance)}
         />
-        <div className="text-center text-sm font-bold mt-2">MNDG</div>
+        <div className="text-center text-sm font-bold mt-2">SCT</div>
       </div>
       <div className="flex items-center justify-between text-xs">
-        <span>Available: {availableBalance} MNDG</span>
+        <span>Available: {availableBalance} SCT</span>
         {hasError && (
           <span className="text-red-500 font-bold">
-            {value > availableBalance ? "Insufficient MNDG balance" : `Max ${maxAmount} MNDG`}
+            {value > availableBalance ? "Insufficient SCT balance" : `Max ${maxAmount} SCT`}
           </span>
         )}
       </div>

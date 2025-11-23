@@ -38,7 +38,7 @@ export function TokenTransactionItem({
       </div>
       <div className={`text-lg font-bold ${isPositive ? "text-green-600" : "text-red-600"}`}>
         {isPositive ? "+" : "-"}
-        {amount} MNDG
+        {amount} SCT
       </div>
     </div>
   )

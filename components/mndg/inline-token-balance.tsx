@@ -9,7 +9,7 @@ export default function InlineTokenBalance({ balance, className = "" }: InlineTo
       <div className="w-5 h-5 bg-black border-2 border-black flex items-center justify-center">
         <span className="text-white text-xs">◆</span>
       </div>
-      <span className="text-base font-bold">{balance} MNDG</span>
+      <span className="text-base font-bold">{balance} SCT</span>
     </div>
   )
 }

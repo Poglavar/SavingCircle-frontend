@@ -9,7 +9,7 @@ import TokenAllocationDisplay from "@/components/mndg/token-allocation-display"
 import MobileBottomNav from "@/components/mobile-bottom-nav"
 import DesktopSidebar from "@/components/desktop-sidebar"
 
-export default function MNDGOverviewPage() {
+export default function SCTOverviewPage() {
   const [bidAmount, setBidAmount] = useState(50)
 
   // Sample data
@@ -48,7 +48,7 @@ export default function MNDGOverviewPage() {
       <div className="min-h-screen md:ml-[240px] pb-16 md:pb-0">
         {/* Header */}
         <div className="h-16 bg-black border-b-2 border-black flex items-center px-4">
-          <span className="text-white text-xl font-bold">← MNDG OVERVIEW</span>
+          <span className="text-white text-xl font-bold">← SCT OVERVIEW</span>
         </div>
 
         <div className="p-4 md:p-8 space-y-8">
@@ -92,16 +92,16 @@ export default function MNDGOverviewPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-lg">
                   <span className="font-bold">Current Balance:</span>
-                  <span className="font-bold">{balance} MNDG</span>
+                  <span className="font-bold">{balance} SCT</span>
                 </div>
                 <div className="h-px bg-gray-300 my-2" />
                 <div className="flex items-center justify-between">
                   <span>Total Earned:</span>
-                  <span className="text-green-500 font-bold">{totalEarned} MNDG</span>
+                  <span className="text-green-500 font-bold">{totalEarned} SCT</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Total Spent:</span>
-                  <span className="text-red-500 font-bold">{totalSpent} MNDG</span>
+                  <span className="text-red-500 font-bold">{totalSpent} SCT</span>
                 </div>
               </div>
             </div>
