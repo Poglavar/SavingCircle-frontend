@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react"
 import { JsonRpcProvider } from "ethers"
 import { fetchCircleContractData, type CircleContractData } from "@/lib/contract-data"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
-import { fetchRegisteredUsersList } from "@/lib/hooks/use-registered-users"
 
 export type CircleListItem = {
   id: string
@@ -56,8 +55,7 @@ export function useDeployedCircles() {
           addresses.map(async (address) => {
             try {
               const data = await fetchCircleContractData(address, provider)
-              const registeredUsers = await fetchRegisteredUsersList(address, provider)
-              const members = registeredUsers.length
+              const members = data.numUsers
               const prize = data.installmentSize * (data.numUsers || 0)
               const timeLeft = deriveTimeLeft(data.roundDeadline)
               return {

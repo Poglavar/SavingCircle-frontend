@@ -20,23 +20,36 @@ export default function SCTOverviewPage() {
   const totalPool = 420
   const yourQuota = 50
 
+  const now = Date.now()
   const transactions = [
     {
       id: 1,
       amount: 50,
       type: "earned" as const,
       description: "Installment payment – Round 3",
-      timestamp: "2 hours ago",
+      timestamp: new Date(now - 2 * 60 * 60 * 1000),
     },
-    { id: 2, amount: -50, type: "spent" as const, description: "Auction bid – Round 3", timestamp: "1 hour ago" },
+    {
+      id: 2,
+      amount: -50,
+      type: "spent" as const,
+      description: "Auction bid – Round 3",
+      timestamp: new Date(now - 60 * 60 * 1000),
+    },
     {
       id: 3,
       amount: 50,
       type: "earned" as const,
       description: "Installment payment – Round 2",
-      timestamp: "1 day ago",
+      timestamp: new Date(now - 24 * 60 * 60 * 1000),
     },
-    { id: 4, amount: -30, type: "spent" as const, description: "Auction bid – Round 2", timestamp: "2 days ago" },
+    {
+      id: 4,
+      amount: -30,
+      type: "spent" as const,
+      description: "Auction bid – Round 2",
+      timestamp: new Date(now - 2 * 24 * 60 * 60 * 1000),
+    },
   ]
 
   const totalEarned = 200
@@ -72,13 +85,13 @@ export default function SCTOverviewPage() {
                 amount={50}
                 type="earned"
                 description="Installment payment – Round 3"
-                timestamp="2 hours ago"
+                timestamp={new Date(now - 2 * 60 * 60 * 1000)}
               />
               <TokenTransactionItem
                 amount={50}
                 type="spent"
                 description="Auction bid – Round 3"
-                timestamp="1 hour ago"
+                timestamp={new Date(now - 60 * 60 * 1000)}
               />
             </div>
           </div>

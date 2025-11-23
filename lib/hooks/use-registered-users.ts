@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Contract, JsonRpcProvider } from "ethers"
 import savingCircleAbi from "@/lib/abi/savingcircle.sol.abi.json"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
+import { withRpcThrottle } from "@/lib/rpc-throttle"
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
@@ -20,7 +21,7 @@ export async function fetchRegisteredUsersList(
   const rpcProvider = provider ?? new JsonRpcProvider(rpc)
   const contract = new Contract(circleAddress, savingCircleAbi, rpcProvider)
 
-  const numUsersBn: bigint = await contract.numUsers()
+  const numUsersBn: bigint = await withRpcThrottle(() => contract.numUsers())
   const totalSlots = Number(numUsersBn)
   const fetchCount = Math.min(totalSlots, maxUsers)
   if (fetchCount === 0) return []
@@ -28,7 +29,7 @@ export async function fetchRegisteredUsersList(
   const registered: string[] = []
   for (let index = 0; index < fetchCount; index++) {
     try {
-      const address: string = await contract.registeredUsers(index)
+      const address: string = await withRpcThrottle(() => contract.registeredUsers(index))
       if (!address) continue
       if (address.toLowerCase() === ZERO_ADDRESS) continue
       registered.push(address.toLowerCase())

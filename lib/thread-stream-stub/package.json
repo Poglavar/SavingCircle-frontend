@@ -1,0 +1,10 @@
+{
+  "name": "thread-stream",
+  "version": "0.0.0-stub",
+  "main": "./index.js",
+  "module": "./index.js",
+  "type": "commonjs",
+  "description": "Browser-safe stub that satisfies consumers expecting thread-stream.",
+  "license": "MIT"
+}
+

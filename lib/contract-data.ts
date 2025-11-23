@@ -1,6 +1,7 @@
 import { Contract, JsonRpcProvider } from "ethers"
 import savingCircleAbi from "@/lib/abi/savingcircle.sol.abi.json"
 import { getSepoliaRpcUrl } from "@/lib/rpc"
+import { withRpcThrottle } from "@/lib/rpc-throttle"
 
 export type CircleContractData = {
   address: string
@@ -34,21 +35,21 @@ export async function fetchCircleContractData(address: string, provider?: JsonRp
     startTimeBn,
     nextRoundToPayBn,
   ] = await Promise.all([
-    contract.name(),
-    contract.currRound(),
-    contract.numRounds(),
-    contract.installmentSize(),
-    contract.numUsers(),
-    contract.protocolTokenRewardPerInstallment(),
-    contract.maxProtocolTokenInAuction(),
-    contract.timePerRound(),
-    contract.startTime(),
-    contract.nextRoundToPay(),
+    withRpcThrottle(() => contract.name()),
+    withRpcThrottle(() => contract.currRound()),
+    withRpcThrottle(() => contract.numRounds()),
+    withRpcThrottle(() => contract.installmentSize()),
+    withRpcThrottle(() => contract.numUsers()),
+    withRpcThrottle(() => contract.protocolTokenRewardPerInstallment()),
+    withRpcThrottle(() => contract.maxProtocolTokenInAuction()),
+    withRpcThrottle(() => contract.timePerRound()),
+    withRpcThrottle(() => contract.startTime()),
+    withRpcThrottle(() => contract.nextRoundToPay()),
   ])
 
   let roundDeadlineBn: bigint
   try {
-    roundDeadlineBn = await contract.roundDeadline(currRoundBn)
+    roundDeadlineBn = await withRpcThrottle(() => contract.roundDeadline(currRoundBn))
   } catch {
     roundDeadlineBn = startTimeBn + timePerRoundBn * (currRoundBn + BigInt(1))
   }
